@@ -26,8 +26,12 @@ export const useContestStore = defineStore('contest', {
       const { data } = await api.contest.findOne(payload)
       this.contest = data.contest
 
+      const payload2 = {
+        page: 1, // 或者根据需要设置其他的页码
+        pageSize: 9999, // 设置一个足够大的 pageSize 来一次性获取所有题目
+      }
       const problemStore = useProblemStore()
-      await problemStore.find(payload) // 调用 find 方法获取题目信息
+      await problemStore.find(payload2) // 调用 find 方法获取题目信息
 
       for (let i = 0; i < data.overview.length; i++) {
         const problemId = data.overview[i].pid

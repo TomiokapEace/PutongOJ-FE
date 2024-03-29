@@ -15,6 +15,7 @@ const { isAdmin } = $(storeToRefs(sessionStore))
 const route = useRoute()
 const cid = $computed(() => Number.parseInt(route.params.cid || 1))
 
+// 课程题目标签分类
 // Tag对应颜色的map: 未出现过的将填颜色值  出现过的直接使用
 const tagColorMap = reactive({})
 // 定义一个颜色列表，可以根据需求进行调整
