@@ -9,6 +9,8 @@ import { useSessionStore } from '@/store/modules/session'
 import { useProblemStore } from '@/store/modules/problem'
 import { useRootStore } from '@/store'
 import { formate } from '@/util/formate'
+import { ref } from 'vue'
+import * as echarts from 'echarts'
 
 const options = reactive([
   {
@@ -82,6 +84,31 @@ function del (pid) {
 onBeforeMount(fetch)
 onRouteQueryUpdate(fetch)
 onProfileUpdate(fetch)
+
+// 题目类别标签 line 205
+// Tag对应颜色的map: 未出现过的将填颜色值  出现过的直接使用
+const tagColorMap = reactive({})
+// 定义一个颜色列表，可以根据需求进行调整
+const tagColors = ref(['#FFCE54', '#48CFAD', '#AC92EC', '#ED5565', '#4FC1E9', '#A0D468', '#EC87C0', '#6A71D7', '#F5D76E', '#3BAFDA', '#BF55EC', '#FF6B6B', '#47B8E0', '#8CC152', '#D770AD', '#967ADC', '#FDD752', '#37BC9B', '#DA4453', '#AAB2BD'])
+// 从列表中取一个值随机填到一种tag中
+function getRandomColor() {
+  const randomIndex = Math.floor(Math.random() * tagColors.value.length)
+  return tagColors.value[randomIndex]
+}
+// 提前储存
+// onBeforeMount(() => {
+//   fetch().then(() => {
+//     list.value.forEach((item) => {
+//       item.tags.forEach((tid) => {
+//         if (!tagColorMap[tid]) {
+//           const randomColor = getRandomColor()
+//           tagColorMap[tid] = randomColor
+//         }
+//       })
+//     })
+//   })
+// })
+// 难度柱状图 保留按钮 直接计算 line 166
 </script>
 
 <template>
@@ -136,23 +163,48 @@ onProfileUpdate(fetch)
               </Button>
             </router-link>
           </td>
-          <td>
-            <span>{{ formate(item.solve / (item.submit + 0.000001)) }}</span>&nbsp;
-            (<router-link :to="{ name: 'status', query: { pid: item.pid, judge: judge.Accepted } }">
-              <Button type="text">
-                {{ item.solve }}
-              </Button>
-            </router-link> /
-            <router-link :to="{ name: 'status', query: { pid: item.pid } }">
-              <Button type="text">
-                {{ item.submit }}
-              </Button>
-            </router-link>)
-          </td>
+            <td>
+              <router-link :to="{ name: 'status', query: { pid: item.pid, judge: judge.Accepted } }">
+                <Button
+                  type="text"
+                  :style="{
+                    backgroundColor: '#A0D468',
+                    color: 'white',
+                    borderColor: '#A0D468',
+                    borderTopLeftRadius: '8px',
+                    borderBottomLeftRadius: '8px',
+                    borderTopRightRadius: '0',
+                    borderBottomRightRadius: '0',
+                    width: `${(item.solve / (item.submit + 0.000001)) * 8 + 1}em`,
+                    height: '100%',
+                  }"
+                >
+                  {{ item.solve }}
+                </Button>
+              </router-link>
+              <router-link :to="{ name: 'status', query: { pid: item.pid } }">
+                <Button
+                  type="text"
+                  :style="{
+                    backgroundColor: '#CCCCCC',
+                    color: 'white',
+                    borderColor: '#CCCCCC',
+                    borderTopRightRadius: '8px',
+                    borderBottomRightRadius: '8px',
+                    borderTopLeftRadius: '0',
+                    borderBottomLeftRadius: '0',
+                    width: `${16 - ((item.solve / (item.submit + 0.000001)) * 8 + 1)}em`,
+                    height: '100%',
+                  }"
+                >
+                  {{ item.submit }}
+                </Button>
+              </router-link>
+            </td>
           <td>
             <template v-for="(item2, index2) in item.tags" :key="index2">
               <router-link :to="{ name: 'problemList', query: { type: 'tag', content: item2 } }">
-                <Tag>{{ item2 }}</Tag>
+                <Tag :style="{ backgroundColor: tagColorMap[item2] || (tagColorMap[item2] = getRandomColor()), height: '100%'}">{{ item2 }}</Tag>
               </router-link>
             </template>
           </td>

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import api from '@/api'
+import { useProblemStore } from '@/store/modules/problem'
 
 export const useContestStore = defineStore('contest', {
   state: () => ({
@@ -10,6 +11,7 @@ export const useContestStore = defineStore('contest', {
     totalProblems: 0,
     ranklist: [],
     solved: [],
+    tagMap: {}, // 存储题目对应的标签列表
   }),
   getters: {
     problems: state => state.contest.list,
@@ -23,6 +25,16 @@ export const useContestStore = defineStore('contest', {
     async findOne (payload) {
       const { data } = await api.contest.findOne(payload)
       this.contest = data.contest
+
+      const problemStore = useProblemStore()
+      await problemStore.find(payload) // 调用 find 方法获取题目信息
+
+      for (let i = 0; i < data.overview.length; i++) {
+        const problemId = data.overview[i].pid
+        const tags = problemStore.list.find((problem) => problem.pid === problemId)?.tags ?? [] // 获取标签列表
+        this.tagMap = { ...this.tagMap, [problemId]: tags } // 将标签信息存储到相应的题目 ID 上
+      }
+      
       this.overview = data.overview
       this.totalProblems = data.totalProblems
       this.solved = data.solved
