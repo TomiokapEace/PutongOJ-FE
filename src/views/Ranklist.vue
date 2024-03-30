@@ -115,7 +115,9 @@ onRouteQueryUpdate(fetch)
               height: '100%',
               borderTopLeftRadius: '4px',
               borderBottomLeftRadius: '4px',
-              width: `${(item.solve / (item.submit + 0.000001)) * 16}em`
+              borderTopRightRadius: (item.solve / (item.submit)) === 1 ? '4px' : '0',
+              borderBottomRightRadius: (item.solve / (item.submit)) === 1 ? '4px' : '0',
+              width: `${(item.solve / (item.submit + 0.000001)) * 5}em`
             }"></div>
             <div class="right-bar" :style="{
               backgroundColor: '#CCCCCC',
@@ -124,7 +126,7 @@ onRouteQueryUpdate(fetch)
               borderBottomRightRadius: '4px',
               borderTopLeftRadius: (item.solve / (item.submit + 0.000001)) === 0 ? '4px' : '0',
               borderBottomLeftRadius: (item.solve / (item.submit + 0.000001)) === 0 ? '4px' : '0',
-              width: `${8 - (item.solve / (item.submit + 0.000001)) * 16}em`
+              width: `${5 - (item.solve / (item.submit + 0.000001)) * 5}em`
             }"></div>
           </div>
         </td>
