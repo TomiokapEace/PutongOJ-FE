@@ -115,8 +115,8 @@ onRouteQueryUpdate(fetch)
               height: '100%',
               borderTopLeftRadius: '4px',
               borderBottomLeftRadius: '4px',
-              borderTopRightRadius: (item.solve / (item.submit)) === 1 ? '4px' : '0',
-              borderBottomRightRadius: (item.solve / (item.submit)) === 1 ? '4px' : '0',
+              borderTopRightRadius: (item.solve / (item.submit)) >= 0.99 ? '4px' : '0',
+              borderBottomRightRadius: (item.solve / (item.submit)) >= 0.99 ? '4px' : '0',
               width: `${(item.solve / (item.submit + 0.000001)) * 5}em`
             }"></div>
             <div class="right-bar" :style="{
