@@ -95,19 +95,6 @@ function getRandomColor() {
   const randomIndex = Math.floor(Math.random() * tagColors.value.length)
   return tagColors.value[randomIndex]
 }
-// 提前储存
-// onBeforeMount(() => {
-//   fetch().then(() => {
-//     list.value.forEach((item) => {
-//       item.tags.forEach((tid) => {
-//         if (!tagColorMap[tid]) {
-//           const randomColor = getRandomColor()
-//           tagColorMap[tid] = randomColor
-//         }
-//       })
-//     })
-//   })
-// })
 // 难度柱状图 保留按钮 直接计算 line 166
 </script>
 

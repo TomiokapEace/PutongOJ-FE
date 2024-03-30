@@ -8,6 +8,7 @@ import { useRootStore } from '@/store'
 import { useRanklistStore } from '@/store/modules/ranklist'
 import { useGroupStore } from '@/store/modules/group'
 import { formate } from '@/util/formate'
+import { reactive, ref } from 'vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -108,7 +109,24 @@ onRouteQueryUpdate(fetch)
           </router-link>
         </td>
         <td>
-          <span>{{ formate(item.solve / (item.submit + 0.0000001)) }}</span>
+          <div class="ratio-bar">
+            <div class="left-bar" :style="{
+              backgroundColor: '#A0D468',
+              height: '100%',
+              borderTopLeftRadius: '4px',
+              borderBottomLeftRadius: '4px',
+              width: `${(item.solve / (item.submit + 0.000001)) * 16}em`
+            }"></div>
+            <div class="right-bar" :style="{
+              backgroundColor: '#CCCCCC',
+              height: '100%',
+              borderTopRightRadius: '4px',
+              borderBottomRightRadius: '4px',
+              borderTopLeftRadius: (item.solve / (item.submit + 0.000001)) === 0 ? '4px' : '0',
+              borderBottomLeftRadius: (item.solve / (item.submit + 0.000001)) === 0 ? '4px' : '0',
+              width: `${8 - (item.solve / (item.submit + 0.000001)) * 16}em`
+            }"></div>
+          </div>
         </td>
       </tr>
     </table>
@@ -138,4 +156,8 @@ onRouteQueryUpdate(fetch)
     td:nth-child(4)
       width: 50%
       padding-right: 10px
+.ratio-bar {
+  display: flex;
+  height: 20px;
+}
 </style>

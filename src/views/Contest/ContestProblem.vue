@@ -6,6 +6,10 @@ import Problem from '@/components/Problem'
 import { useProblemStore } from '@/store/modules/problem'
 import { useContestStore } from '@/store/modules/contest'
 import { onRouteParamUpdate } from '@/util/helper'
+// import { reactive, ref } from 'vue'
+// import { ECharts as Chart } from 'vue-echarts'
+// import 'echarts/lib/chart/pie'
+// import 'echarts/lib/component/title'
 
 const { t } = useI18n()
 const problemStore = useProblemStore()
@@ -26,6 +30,46 @@ function fetch () {
 const pageChange = val => router.push({ name: 'contestProblem', params: { id: val } })
 const submit = () => router.push({ name: 'contestSubmit', params: router.params })
 
+// const pieOption = reactive({
+//   title: {
+//     text: 'Referer of a Website',
+//     subtext: 'Fake Data',
+//     left: 'center'
+//   },
+//   tooltip: {
+//     trigger: 'item'
+//   },
+//   legend: {
+//     orient: 'vertical',
+//     left: 'left'
+//   },
+//   series: [
+//     {
+//       name: 'Access From',
+//       type: 'pie',
+//       radius: '50%',
+//       data: [
+//         { value: 100, name: 'CE' },
+//         { value: 1000, name: 'AC' },
+//         { value: 1000, name: 'RE' },
+//         { value: 1000, name: 'WA' },
+//         { value: 1000, name: 'TLE' },
+//         { value: 1000, name: 'MLE' },
+//         { value: 1000, name: 'OLE' },
+//         { value: 1000, name: 'PE' },
+//         { value: 1000, name: 'SE' },
+//       ],
+//       emphasis: {
+//         itemStyle: {
+//           shadowBlur: 10,
+//           shadowOffsetX: 0,
+//           shadowColor: 'rgba(0, 0, 0, 0.5)'
+//         }
+//       }
+//     }
+//   ]
+// })
+
 fetch()
 onRouteParamUpdate(fetch)
 </script>
@@ -45,6 +89,13 @@ onRouteParamUpdate(fetch)
     <Button shape="circle" icon="md-paper-plane" @click="submit">
       {{ t('oj.submit') }}
     </Button>
+    <!-- <div class="chart-container">
+      <Chart v-if="isAdmin" :option="pieOption" auto-resize />
+    </div> -->
+    <!-- .chart-container {
+      height: 400px;
+      margin-top: 20px;
+    } -->
   </div>
 </template>
 
