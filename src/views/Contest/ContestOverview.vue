@@ -28,14 +28,15 @@ function getRandomColor() {
 </script>
 
 <template>
+  <h2>{{ "完成进度" }}</h2>
+    <div class="progress-bar">
+      <div class="progress" :style="{ width: `${(solved.length / overview.length) * 100}%` }"></div>
+    </div>
   <div class="conover-wrap">
     <h2>{{ contest.title }}</h2>
     <h4>Start Time:&nbsp;&nbsp;{{ timePretty(contest.create) }}</h4>
     <h4>End Time:&nbsp;&nbsp;{{ timePretty(contest.end) }}</h4>
-    <h2>{{ "完成进度" }}</h2>
-    <div class="progress-bar">
-      <div class="progress" :style="{ width: `${(solved.length / overview.length) * 100}%` }"></div>
-    </div>
+    
     <table>
       <tr>
         <th>#</th>

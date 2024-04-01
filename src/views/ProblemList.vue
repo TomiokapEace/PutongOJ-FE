@@ -10,7 +10,6 @@ import { useProblemStore } from '@/store/modules/problem'
 import { useRootStore } from '@/store'
 import { formate } from '@/util/formate'
 import { ref } from 'vue'
-import * as echarts from 'echarts'
 
 const options = reactive([
   {
