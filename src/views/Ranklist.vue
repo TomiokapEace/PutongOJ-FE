@@ -109,25 +109,8 @@ onRouteQueryUpdate(fetch)
           </router-link>
         </td>
         <td>
-          <div class="ratio-bar">
-            <div class="left-bar" :style="{
-              backgroundColor: '#A0D468',
-              height: '100%',
-              borderTopLeftRadius: '4px',
-              borderBottomLeftRadius: '4px',
-              borderTopRightRadius: (item.solve / (item.submit)) >= 0.99 ? '4px' : '0',
-              borderBottomRightRadius: (item.solve / (item.submit)) >= 0.99 ? '4px' : '0',
-              width: `${(item.solve / (item.submit + 0.000001)) * 5}em`
-            }"></div>
-            <div class="right-bar" :style="{
-              backgroundColor: '#CCCCCC',
-              height: '100%',
-              borderTopRightRadius: '4px',
-              borderBottomRightRadius: '4px',
-              borderTopLeftRadius: (item.solve / (item.submit + 0.000001)) === 0 ? '4px' : '0',
-              borderBottomLeftRadius: (item.solve / (item.submit + 0.000001)) === 0 ? '4px' : '0',
-              width: `${5 - (item.solve / (item.submit + 0.000001)) * 5}em`
-            }"></div>
+          <div class="progress-bar">
+            <div class="progress" :style="{ width: `${(item.solve / item.submit) * 100}%` }"></div>
           </div>
         </td>
       </tr>
@@ -158,8 +141,16 @@ onRouteQueryUpdate(fetch)
     td:nth-child(4)
       width: 50%
       padding-right: 10px
-.ratio-bar {
+.progress-bar {
   display: flex;
   height: 20px;
+  background-color: #e8e8e8;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: #A0D468;
 }
 </style>

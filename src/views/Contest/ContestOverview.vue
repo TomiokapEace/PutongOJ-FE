@@ -32,6 +32,10 @@ function getRandomColor() {
     <h2>{{ contest.title }}</h2>
     <h4>Start Time:&nbsp;&nbsp;{{ timePretty(contest.create) }}</h4>
     <h4>End Time:&nbsp;&nbsp;{{ timePretty(contest.end) }}</h4>
+    <h2>{{ "完成进度" }}</h2>
+    <div class="progress-bar">
+      <div class="progress" :style="{ width: `${(solved.length / overview.length) * 100}%` }"></div>
+    </div>
     <table>
       <tr>
         <th>#</th>
@@ -70,6 +74,17 @@ function getRandomColor() {
 
 <style lang="stylus" scoped>
 @import '../../styles/common'
+.progress-bar {
+  height: 10px;
+  background-color: #e8e8e8;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: #A0D468;
+}
 
 h2
   text-align: center
@@ -80,4 +95,5 @@ h4
   margin-bottom: 8px
 table
   margin-bottom: 20px
+
 </style>
