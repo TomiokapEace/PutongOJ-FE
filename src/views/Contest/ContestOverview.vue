@@ -28,7 +28,7 @@ function getRandomColor() {
 </script>
 
 <template>
-  <h2>{{ "完成进度" }}</h2>
+  <h2>{{ "Completion Progress" }}</h2>
     <div class="progress-bar">
       <div class="progress" :style="{ width: `${(solved.length / overview.length) * 100}%` }"></div>
     </div>
