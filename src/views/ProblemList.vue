@@ -94,7 +94,19 @@ function getRandomColor() {
   const randomIndex = Math.floor(Math.random() * tagColors.value.length)
   return tagColors.value[randomIndex]
 }
-// 难度柱状图 保留按钮 直接计算 line 166
+// 难度柱状图 保留按钮 直接计算 line 168
+// 热度图标 计算 line 165
+const getHeatImage = (submit) => {
+  if (submit >= 100) {
+    return require('../assets/hot1.jpg');
+  } else if (submit >= 50) {
+    return require('../assets/hot2.jpg');
+  } else if (submit >= 25) {
+    return require('../assets/hot3.jpg');
+  } else {
+    return require('../assets/hot4.jpg');
+  }
+};
 </script>
 
 <template>
@@ -127,6 +139,7 @@ function getRandomColor() {
         <th>#</th>
         <th>PID</th>
         <th>Title</th>
+        <th class="heat-column">Heat</th>
         <th>Ratio</th>
         <th>Tags</th>
         <th v-if="isAdmin">
@@ -149,44 +162,47 @@ function getRandomColor() {
               </Button>
             </router-link>
           </td>
-            <td>
-              <router-link :to="{ name: 'status', query: { pid: item.pid, judge: judge.Accepted } }">
-                <Button
-                  type="text"
-                  :style="{
-                    backgroundColor: '#A0D468',
-                    color: 'white',
-                    borderColor: '#A0D468',
-                    borderTopLeftRadius: '8px',
-                    borderBottomLeftRadius: '8px',
-                    borderTopRightRadius: '0',
-                    borderBottomRightRadius: '0',
-                    width: `${(item.solve / (item.submit + 0.000001)) * 8 + 1}em`,
-                    height: '100%',
-                  }"
-                >
-                  {{ item.solve }}
-                </Button>
-              </router-link>
-              <router-link :to="{ name: 'status', query: { pid: item.pid } }">
-                <Button
-                  type="text"
-                  :style="{
-                    backgroundColor: '#CCCCCC',
-                    color: 'white',
-                    borderColor: '#CCCCCC',
-                    borderTopRightRadius: '8px',
-                    borderBottomRightRadius: '8px',
-                    borderTopLeftRadius: '0',
-                    borderBottomLeftRadius: '0',
-                    width: `${16 - ((item.solve / (item.submit + 0.000001)) * 8 + 1)}em`,
-                    height: '100%',
-                  }"
-                >
-                  {{ item.submit }}
-                </Button>
-              </router-link>
-            </td>
+          <td class="heat-column">
+            <img :src="getHeatImage(item.submit)" style="height: 50%" />
+          </td>
+          <td>
+            <router-link :to="{ name: 'status', query: { pid: item.pid, judge: judge.Accepted } }">
+              <Button
+                type="text"
+                :style="{
+                  backgroundColor: '#A0D468',
+                  color: 'white',
+                  borderColor: '#A0D468',
+                  borderTopLeftRadius: '8px',
+                  borderBottomLeftRadius: '8px',
+                  borderTopRightRadius: '0',
+                  borderBottomRightRadius: '0',
+                  width: `${(item.solve / (item.submit + 0.000001)) >= 0.01 ? (item.solve / (item.submit + 0.000001)) * 12 : 1}em`,
+                  height: '100%',
+                }"
+              >
+                {{ item.solve }}
+              </Button>
+            </router-link>
+            <router-link :to="{ name: 'status', query: { pid: item.pid } }">
+              <Button
+                type="text"
+                :style="{
+                  backgroundColor: '#CCCCCC',
+                  color: 'white',
+                  borderColor: '#CCCCCC',
+                  borderTopRightRadius: '8px',
+                  borderBottomRightRadius: '8px',
+                  borderTopLeftRadius: '0',
+                  borderBottomLeftRadius: '0',
+                  width: `${(12 - ((item.solve / (item.submit + 0.000001)) >= 0.01 ? (item.solve / (item.submit + 0.000001)) * 12 : 1)) >= 1 ? (12 - ((item.solve / (item.submit + 0.000001)) >= 0.01 ? (item.solve / (item.submit + 0.000001)) * 12 : 1)) : 1}em`,
+                  height: '100%',
+                }"
+              >
+                {{ item.submit - item.solve }}
+              </Button>
+            </router-link>
+          </td>
           <td>
             <template v-for="(item2, index2) in item.tags" :key="index2">
               <router-link :to="{ name: 'problemList', query: { type: 'tag', content: item2 } }">
@@ -215,6 +231,10 @@ function getRandomColor() {
 <style lang="stylus" scoped>
 @import '../styles/common'
 
+.heat-column {
+  width: 3em;
+  horizonal-align: middle;
+}
 table
   th:nth-child(1)
     width: 5%

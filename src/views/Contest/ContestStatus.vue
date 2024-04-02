@@ -11,6 +11,11 @@ import { useSolutionStore } from '@/store/modules/solution'
 import { useContestStore } from '@/store/modules/contest'
 import { useRootStore } from '@/store'
 import { timePretty } from '@/util/formate'
+import Chart from 'vue-echarts'
+import 'echarts/lib/chart/pie'
+import 'echarts/lib/component/title'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/legend'
 
 const { t } = useI18n()
 const sessionStore = useSessionStore()
@@ -73,7 +78,38 @@ function reload (payload = {}) {
   })
 }
 
+const countList = Array(9).fill(0) // 初始化长度为 9 的 countList，初始值为 0
+const showChart = false
 function search () {
+  // 查询指定题目的提交结果并将结果存储到 countList 中
+  reload({
+    pid,
+  })
+  if(pid != 0) {
+    showChart = true;
+  }
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i]
+    if (item.judge === 2) {
+      countList[0]++
+    } else if (item.judge === 3) {
+      countList[1]++
+    } else if (item.judge === 4) {
+      countList[2]++
+    } else if (item.judge === 5) {
+      countList[3]++
+    } else if (item.judge === 6) {
+      countList[4]++
+    } else if (item.judge === 7) {
+      countList[5]++
+    } else if (item.judge === 8) {
+      countList[6]++
+    } else if (item.judge === 9) {
+      countList[7]++
+    } else if (item.judge === 10) {
+      countList[8]++
+    }
+  }
   return reload({
     page: 1,
     uid,
@@ -82,6 +118,44 @@ function search () {
     judge,
   })
 }
+
+const pie = $computed(() => {
+  const data = {
+    title: {
+      text: `Statistics`,
+    },
+    tooltip: {
+      trigger: 'item',
+    },
+    legend: {
+      orient: 'horizontal',
+      x: 'center',
+      y: 'bottom',
+      data: [ 'CE', 'AC', 'RE', 'WA', 'TLE', 'MLE', 'OLE', 'PE', 'SE' ],
+    },
+    calculable: true,
+    series: [
+      {
+        name: 'Statistics',
+        type: 'pie',
+        radius: '55%',
+        center: [ '50%', '50%' ],
+        data: [
+          { value: countList[0] || 0, name: 'CE' },
+          { value: countList[1] || 0, name: 'AC' },
+          { value: countList[2] || 0, name: 'RE' },
+          { value: countList[3] || 0, name: 'WA' },
+          { value: countList[4] || 0, name: 'TLE' },
+          { value: countList[5] || 0, name: 'MLE' },
+          { value: countList[6] || 0, name: 'OLE' },
+          { value: countList[7] || 0, name: 'PE' },
+          { value: countList[8] || 0, name: 'SE' },
+        ],
+      },
+    ],
+  }
+  return data
+})
 
 const pageChange = val => reload({ page: val })
 
@@ -207,6 +281,12 @@ onRouteQueryUpdate(fetch)
       </tr>
     </table>
   </div>
+  <td v-if="isAdmin">
+    <h3>{{ "Status Review" }}</h3>
+    <div v-if="showPieChart">
+      <Chart ref="pie" :option="pie" auto-resize />
+    </div>
+  </td>
 </template>
 
 <style lang="stylus" scoped>
