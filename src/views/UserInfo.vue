@@ -7,6 +7,9 @@ import { onProfileUpdate, onRouteParamUpdate, purify } from '@/util/helper'
 import { useUserStore } from '@/store/modules/user'
 import { useSessionStore } from '@/store/modules/session'
 import { useRootStore } from '@/store'
+import 'echarts/lib/chart/pie'
+import { onMounted, ref } from 'vue'
+import * as echarts from 'echarts'
 
 const { t } = useI18n()
 const userStore = useUserStore()
@@ -14,7 +17,7 @@ const rootStore = useRootStore()
 const sessionStore = useSessionStore()
 
 const { findOne, update, 'delete': remove } = userStore
-const { user, solved, unsolved, group } = $(storeToRefs(userStore))
+const { user, solved, unsolved, group, solvedTag } = $(storeToRefs(userStore))
 const { isAdmin, profile, canRemove } = $(storeToRefs(sessionStore))
 
 let display = $ref('overview')
@@ -30,6 +33,43 @@ async function fetch () {
   await findOne(route.params)
   rootStore.changeDomTitle({ title: user.uid })
 }
+
+const chartRef = ref(null)
+let chart = null
+
+onMounted(() => {
+  chart = echarts.init(chartRef.value)
+
+  const pieOption = {
+    tooltip: {
+      trigger: 'item',
+    },
+    legend: {
+      orient: 'vertical',
+      x: 'left',
+      y: '350px',
+      left: 'left'
+    },
+    series: [
+      {
+        name: 'Statistics',
+        type: 'pie',
+        radius: '60%',
+        center: ['50%', '50%'],
+        data: solvedTag,
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
+        }
+      }
+    ]
+  }
+
+  chart.setOption(pieOption)
+})
 
 async function submit () {
   if (newPwd === checkPwd) {
@@ -119,6 +159,10 @@ onProfileUpdate(fetch)
                   {{ item }}
                 </router-link>
               </Button>
+              <div class="chart-container">
+                <div>{{ "Solved Problem Tag Distribution" }}</div>
+                <div ref="chartRef" style="width: 400px; height: 400px;" :solvedTag="solvedTag"></div>
+              </div>
             </div>
             <div class="unsolved">
               <div class="unsolved-name">
