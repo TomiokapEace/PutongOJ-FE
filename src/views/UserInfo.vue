@@ -67,8 +67,12 @@ onMounted(() => {
       }
     ]
   }
-
+  
   chart.setOption(pieOption)
+
+  // console.log('chartRef:', chartRef.value);
+  // console.log('solvedTag:', solvedTag);
+
 })
 
 async function submit () {
