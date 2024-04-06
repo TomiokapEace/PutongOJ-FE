@@ -163,10 +163,6 @@ onProfileUpdate(fetch)
                   {{ item }}
                 </router-link>
               </Button>
-              <div class="chart-container">
-                <div>{{ "Solved Problem Tag Distribution" }}</div>
-                <div ref="chartRef" style="width: 400px; height: 400px;" :solvedTag="solvedTag"></div>
-              </div>
             </div>
             <div class="unsolved">
               <div class="unsolved-name">
@@ -177,6 +173,10 @@ onProfileUpdate(fetch)
                   {{ item }}
                 </router-link>
               </Button>
+            </div>
+            <div class="chart-container">
+              <div>{{ "Solved Problem Tag Distribution" }}</div>
+              <div ref="chartRef" style="width: 400px; height: 400px;" :solvedTag="solvedTag"></div>
             </div>
           </TabPane>
           <TabPane
