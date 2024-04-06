@@ -20,7 +20,7 @@ const rootStore = useRootStore()
 const route = useRoute()
 const router = useRouter()
 
-const { list, sum } = $(storeToRefs(contestStore))
+const { list, sum } = contestStore // 修复修改findOne后，list不能正常罗列，点击到别的栏目再点回来即可，直接刷新不可以
 const { status, encrypt, currentTime } = $(storeToRefs(rootStore))
 const { profile, isLogined, isAdmin, canRemove } = $(storeToRefs(sessionStore))
 const page = $computed(() => Number.parseInt(route.query.page) || 1)

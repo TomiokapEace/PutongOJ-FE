@@ -4,7 +4,6 @@ import { useProblemStore } from '@/store/modules/problem'
 
 export const useContestStore = defineStore('contest', {
   state: () => ({
-    list: [],
     sum: 0,
     contest: {},
     overview: [],
@@ -12,6 +11,7 @@ export const useContestStore = defineStore('contest', {
     ranklist: [],
     solved: [],
     tagMap: {}, // 存储题目对应的标签列表
+    statisticsList: []// 添加饼图所需的数据 statisticsList
   }),
   getters: {
     problems: state => state.contest.list,
@@ -25,7 +25,7 @@ export const useContestStore = defineStore('contest', {
     async findOne (payload) {
       const { data } = await api.contest.findOne(payload)
       this.contest = data.contest
-
+      // 获取contest题目列表的tag列表
       const payload2 = {
         page: 1, // 或者根据需要设置其他的页码
         pageSize: 9999, // 设置一个足够大的 pageSize 来一次性获取所有题目
@@ -38,7 +38,57 @@ export const useContestStore = defineStore('contest', {
         const tags = problemStore.list.find((problem) => problem.pid === problemId)?.tags ?? [] // 获取标签列表
         this.tagMap = { ...this.tagMap, [problemId]: tags } // 将标签信息存储到相应的题目 ID 上
       }
-      
+
+      // 获取contest题目列表的指定题目的提交列表
+      // 统计不同judge类型的个数
+      const statistics = {
+        AC: 0,
+        CE: 0,
+        RE: 0,
+        WA: 0,
+        TLE: 0,
+        MLE: 0,
+        OLE: 0,
+        PE: 0,
+        SE: 0
+      }
+
+      const { data: solutionData } = await api.solution.find(payload) // 获取题目对应的solution列表
+      let solutionList = solutionData.list.docs
+      for (let item of solutionList) {
+        switch (item.judge) {
+          case 2:
+            statistics.CE += 1
+            break
+          case 3:
+            statistics.AC += 1
+            break
+          case 4:
+            statistics.RE += 1
+            break
+          case 5:
+            statistics.WA += 1
+            break
+          case 6:
+            statistics.TLE += 1
+            break
+          case 7:
+            statistics.MLE += 1
+            break
+          case 8:
+            statistics.OLE += 1
+            break
+          case 9:z
+            statistics.PE += 1
+            break
+          case 10:
+            statistics.SE += 1
+            break
+        }
+      }
+
+      this.statisticsList = Object.entries(statistics).map(([name, value]) => ({ value: value, name: name }))
+
       this.overview = data.overview
       this.totalProblems = data.totalProblems
       this.solved = data.solved
