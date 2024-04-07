@@ -48,6 +48,7 @@ export default {
 
     solved: '已解决',
     unsolved: '未解决',
+    Solved_Problem_Tag_Distribution: '已解决问题标签分布',
     my_submissions: '我的提交',
     statistics: '统计',
     test_data: '测试数据',

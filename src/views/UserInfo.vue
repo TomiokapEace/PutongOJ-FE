@@ -8,6 +8,7 @@ import { useUserStore } from '@/store/modules/user'
 import { useSessionStore } from '@/store/modules/session'
 import { useRootStore } from '@/store'
 import 'echarts/lib/chart/pie'
+import 'echarts/lib/chart/line'
 import { onMounted, ref } from 'vue'
 import * as echarts from 'echarts'
 
@@ -17,7 +18,7 @@ const rootStore = useRootStore()
 const sessionStore = useSessionStore()
 
 const { findOne, update, 'delete': remove } = userStore
-const { user, solved, unsolved, group, solvedTag } = $(storeToRefs(userStore))
+const { user, solved, unsolved, group, solvedTag, dateData, submitData } = $(storeToRefs(userStore))
 const { isAdmin, profile, canRemove } = $(storeToRefs(sessionStore))
 
 let display = $ref('overview')
@@ -36,6 +37,8 @@ async function fetch () {
 
 const chartRef = ref(null)
 let chart = null
+const lineChartRef = ref(null)
+let lineChart = null
 
 onMounted(() => {
   chart = echarts.init(chartRef.value)
@@ -72,6 +75,31 @@ onMounted(() => {
 
   // console.log('chartRef:', chartRef.value);
   // console.log('solvedTag:', solvedTag);
+
+  lineChart = echarts.init(lineChartRef.value)
+
+  const lineOption = {
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: dateData
+    },
+    yAxis: {
+      type: 'value'
+    },
+    series: [
+      {
+        data: submitData,
+        type: 'line',
+        areaStyle: {}
+      }
+    ]
+  }
+
+  lineChart.setOption(lineOption)
+
+  // console.log('dateData:', dateData);
+  // console.log('submitData:', submitData);
 
 })
 
@@ -174,10 +202,20 @@ onProfileUpdate(fetch)
                 </router-link>
               </Button>
             </div>
-            <div class="chart-container">
-              <div>{{ "Solved Problem Tag Distribution" }}</div>
-              <div ref="chartRef" style="width: 400px; height: 400px;" :solvedTag="solvedTag"></div>
-            </div>
+            <Row>
+              <Col :span="12">
+                <div class="chart">
+                  <div>{{ "Solved Problem Tag Distribution" }}</div>
+                  <div ref="chartRef" style="width: 400px; height: 400px;" :solvedTag="solvedTag"></div>
+                </div>
+              </Col>
+              <Col :span="12">
+                <div class="line-chart">
+                  <div>{{ "Submission in the past week" }}</div>
+                  <div ref="lineChartRef" style="width: 400px; height: 400px;"></div>
+                </div>
+              </Col>
+            </Row>
           </TabPane>
           <TabPane
             v-if="profile && profile.uid === user.uid"
@@ -266,6 +304,12 @@ onProfileUpdate(fetch)
     h1, h4
       text-align: center
   .solved, .unsolved
+    margin-bottom: 30px
+  .ivu-btn-text
+    margin-left: 10px
+    padding: 0
+    font-size: 14px
+  .chart, .line-chart
     margin-bottom: 30px
   .ivu-btn-text
     margin-left: 10px
