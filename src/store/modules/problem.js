@@ -11,7 +11,6 @@ export const useProblemStore = defineStore('problem', {
   actions: {
     findOne (payload) {
       return api.problem.findOne(payload).then(({ data }) => {
-        console.log('Problem Data:', data)
         this.problem = data.problem
         return data
       })

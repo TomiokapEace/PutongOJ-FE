@@ -68,7 +68,7 @@ onMounted(() => {
   
   chart.setOption(pieOption)
 
-  console.log('statisticsList:', statisticsList);
+  // console.log('statisticsList:', statisticsList);
 })
 
 fetch()
